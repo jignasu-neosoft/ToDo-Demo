@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo</title>
+    <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="todo-wrapper">
+        <div class="top">
+            <div class="todo-input">
+                <input type="text" id="todoName" placeholder="Write Here...">
+            </div>
+            <div class="button"><button type="button" id="submit" onclick="todo()">Add Task</button></div>
+        </div>
+        <div class="bottom">
+            <h4>Todo List</h4>
+            <ul id="todo-list"></ul>
+        </div>
+    </div>
+
+    <script>        
+        function todo() {
+            var taskName = document.getElementById("todoName");
+
+            /*Add*/
+            if (taskName.value == ""){
+                return false;
+            } else {
+                let element=document.createElement("li");
+                element.innerHTML="<h4>"+taskName.value+"</h4>"+"<div class='action'><button type='button' class='edit'>Edit</button><button type='button' class='delete'>Delete</button></div>";
+                element.classList.add('todo-items');
+                document.getElementById("todo-list").appendChild(element);
+
+                taskName.value="";
+            }
+
+            /*Edit*/
+            var edit = document.getElementsByClassName("edit");
+            for (i = 0; i < edit.length; i++) {
+                edit[i].onclick = function() {
+                    var findParent = this.parentElement.parentElement;
+                    var sec = findParent.getElementsByTagName("h4")[0];
+
+                    findParent.getElementsByTagName("h4")[0].contentEditable = true;
+                    findParent.getElementsByClassName("action")[0].style.display = "none";
+
+                    sec.focus();                    
+
+                    var update=document.createElement("button");
+                    update.type = 'button';
+                    update.className = 'update';
+                    update.innerHTML = 'Update';                    
+                    findParent.appendChild(update);
+
+                    /*Update*/
+                    var updateBtn = document.getElementsByClassName("update");
+                    for (i = 0; i < updateBtn.length; i++) {
+                        updateBtn[i].onclick = function() {
+                            var findParent = this.parentElement;
+
+                            findParent.getElementsByTagName("h4")[0].contentEditable = false;
+                            findParent.getElementsByClassName("action")[0].style.display = "flex";
+
+                            updateBtn[0].remove();
+
+                        }
+                    }
+
+                }
+            }            
+
+            /*Delete*/
+            var close = document.getElementsByClassName("delete");
+            for (i = 0; i < close.length; i++) {
+                close[i].onclick = function() {
+                    var div = this.parentElement.parentElement;
+                    div.remove();
+                }
+            }
+        }
+        var input = document.getElementById("todoName");
+        input.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {  
+                todo();
+            }
+        });
+    </script>
+</body>
+</html>
